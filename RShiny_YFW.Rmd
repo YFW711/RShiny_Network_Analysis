@@ -3,9 +3,9 @@ title: "RShiny_EvanWang"
 author: "YFW"
 date: "June 6, 2018"
 output:
-  pdf_document: default
   html_document:
     theme: cosmo
+  pdf_document: default
 ---
 
 ## I. Library & Data Setup
@@ -34,7 +34,7 @@ loc_team = read.xlsx('/Users/wangevan/Google Drive/UMN MSBA/JOB/Humanyze/g_loc_t
 ```
 
 ## II. RShiny
-```{r}
+```{r,results = "hide",eval=FALSE}
 server <- function(input, output) {
   output$network_proxy_nodes <- renderVisNetwork({
     nodes <- data.frame(id = unique(loc_team$Loc...Team_Sen),
