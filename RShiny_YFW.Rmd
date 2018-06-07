@@ -1,0 +1,103 @@
+---
+title: "RShiny_EvanWang"
+author: "Yi-Fan Wang - University of Minnesota"
+date: "June 6, 2018"
+output: 
+  html_document: 
+    theme: cosmo
+---
+
+## I. Library & Data Setup
+```{r,warning=FALSE, message=FALSE,echo=TRUE, include=TRUE, results="hide"}
+library(shiny)
+library(knitr)
+library(kableExtra)
+library(formattable)
+library(plyr)
+library(dplyr) # for data munging
+library(ggplot2) # for visualization
+library(shiny)
+library(reshape2)#for melt function
+library(gmodels)# for crosstabulation
+library(stargazer)
+library(pander) # Digit
+require(shiny)
+require(visNetwork)
+library(igraph)
+require(xlsx)
+#loc_team = read.xlsx(file.choose(),sheetIndex = 1)
+```
+
+```{r,echo = FALSE, results="hide"}
+loc_team = read.xlsx('/Users/wangevan/Google Drive/UMN MSBA/JOB/Humanyze/g_loc_team.xlsx',sheetIndex = 1)
+```
+
+## II. RShiny
+```{r}
+server <- function(input, output) {
+  output$network_proxy_nodes <- renderVisNetwork({
+    nodes <- data.frame(id = unique(loc_team$Loc...Team_Sen),
+                        shadow = c(FALSE, TRUE, FALSE, TRUE, TRUE) ,
+                        label = c("A_Business","A_R&D","A_IT","B_Data","B_Business"),
+                        group = c("Business","Tech","IT","Analytics","Business"))
+    edges <- data.frame(from = loc_team$Loc...Team_Sen , to = loc_team$Loc...Team_Rec, 
+                        value = loc_team$Count,
+                        label = loc_team$Count,
+                        length = rep(470,25))
+    visNetwork(nodes, edges, main = "Team Communication Visualization by Network Analysis ",height = "500px",width = "100%") %>%
+      visEdges(shadow = TRUE,
+               arrows =list(to = list(enabled = TRUE)),
+               color = list(color = "lightblue", highlight = "red")) %>%
+      visGroups(groupname = "Business", shape = "icon", icon = list(code = "f0c0",color = "green")) %>%
+      visGroups(groupname = "Tech", shape = "icon", icon = list(code = "f00e", color = "red")) %>%
+      visGroups(groupname = "IT", shape = "icon", icon = list(code = "f11c", color = "orange")) %>%
+      visGroups(groupname = "Analytics", shape = "icon", icon = list(code = "f1c0", color = "grey")) %>%
+      addFontAwesome() %>%
+      visLegend(addNodes = data.frame(position = "right",
+                                      label = c("Business", "Tech"), shape = "icon", 
+                                      icon.code = c("f0c0", "f007"), 
+                                      icon.size = c(20,30), 
+                                      icon.color = c(NA, "red")),
+                addEdges = data.frame(label = "link"), useGroups = FALSE)%>% 
+      visOptions(selectedBy = "group",nodesIdSelection = TRUE) %>% 
+      visInteraction(navigationButtons = TRUE) %>%
+      visLayout(randomSeed = 12)
+  })
+  
+  
+  observe({
+    visNetworkProxy("network_proxy_nodes") %>%
+      visFocus(id = input$Focus, scale = 2)
+  })
+  
+  observe({
+    visNetworkProxy("network_proxy_nodes") %>%
+      visNodes(color = input$color)
+  })
+  
+}
+
+ui <- fluidPage(
+  fluidRow(
+    column(
+      width = 2,
+      selectInput("color", "Color :",
+                  c("blue", "red", "grey")),
+      selectInput("Focus", "Focus on node :",
+                  unique(loc_team$Loc...Team_Sen))
+    ),
+    column(
+      width = 8,
+      visNetworkOutput("network_proxy_nodes", height = "500px")
+    )
+  )
+)
+
+shinyApp(ui = ui, server = server)
+```
+
+
+## III. RShiny Result
+```{r,echo=FALSE }
+include_graphics("/Users/wangevan/Desktop/Screen Shot.png")
+```
