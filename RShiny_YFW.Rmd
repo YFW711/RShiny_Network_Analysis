@@ -29,7 +29,7 @@ require(xlsx)
 #loc_team = read.xlsx(file.choose(),sheetIndex = 1)
 ```
 
-```{r,echo = FALSE, results="hide"}
+```{r,echo = FALSE, results="hide", eval=FALSE}
 loc_team = read.xlsx('/Users/wangevan/Google Drive/UMN MSBA/JOB/Humanyze/g_loc_team.xlsx',sheetIndex = 1)
 ```
 
