@@ -1,9 +1,10 @@
 ---
 title: "RShiny_EvanWang"
-author: "Yi-Fan Wang - University of Minnesota"
+author: "YFW"
 date: "June 6, 2018"
-output: 
-  html_document: 
+output:
+  pdf_document: default
+  html_document:
     theme: cosmo
 ---
 
