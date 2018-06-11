@@ -29,8 +29,8 @@ require(xlsx)
 #loc_team = read.xlsx(file.choose(),sheetIndex = 1)
 ```
 
-```{r,echo = FALSE, results="hide", include=FALSE}
-loc_team = read.xlsx('/Users/wangevan/Google Drive/UMN MSBA/JOB/Humanyze/g_loc_team.xlsx',sheetIndex = 1)
+```{r,echo = FALSE, results="hide", include=FALSE, eval=FALSE}
+loc_team = read.xlsx(file.choose(),sheetIndex = 1)
 ```
 
 ## II. RShiny
@@ -99,6 +99,6 @@ shinyApp(ui = ui, server = server)
 
 
 ## III. RShiny Result
-```{r,echo=FALSE }
+```{r,echo=FALSE}
 include_graphics("/Users/wangevan/Desktop/Screen Shot.png")
 ```
